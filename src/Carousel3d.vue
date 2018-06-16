@@ -19,8 +19,6 @@ import Controls from './Controls.vue';
 import Slide from './Slide.vue';
 import props from './props';
 
-const noop = () => {};
-
 export default {
   name: 'carousel3d',
   components: {
@@ -182,11 +180,6 @@ export default {
       this.lock = true;
 
       if (this.isLastSlide) {
-        if (this.onLastSlide !== noop) {
-          console.warn('onLastSlide deprecated, please use @last-slide');
-        }
-        this.onLastSlide(this.currentIndex);
-
         this.$emit('last-slide', this.currentIndex);
       }
 
@@ -228,14 +221,6 @@ export default {
      */
     animationEnd() {
       this.lock = false;
-
-      if (this.onSlideChange !== noop) {
-        console.warn(
-          'onSlideChange deprecated, please use @after-slide-change'
-        );
-      }
-      this.onSlideChange(this.currentIndex);
-
       this.$emit('after-slide-change', this.currentIndex);
     },
     /**

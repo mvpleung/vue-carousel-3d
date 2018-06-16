@@ -41,6 +41,54 @@ export default {
       default() {
         return [];
       }
+    },
+    /**
+     * 边框
+     */
+    border: {
+      type: Number,
+      default: 0
+    },
+    /**
+     *slide之间的距离
+     *单为px
+     */
+    space: {
+      type: Number,
+      default: 0
+    },
+    /**
+     *slide宽度
+     *单为px
+     */
+    width: {
+      type: Number,
+      default: 0
+    },
+    /**
+     *slide高度
+     *单为px
+     */
+    height: {
+      type: Number,
+      default: 0
+    },
+    /**
+     *slide高度
+     *rotateY 度数
+     *可正负值
+     */
+    perspective: {
+      type: Number,
+      default: 0
+    },
+    /**
+     *是否3D展示
+     *
+     */
+    disable3d: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -82,20 +130,29 @@ export default {
 
 <style lang="scss">
 .carousel-plates {
-  .current .routine {
-    font-size: 52px !important;
-    width: 400px !important;
-    // width: auto !important;
-    // padding: 0 15px !important;
-  }
   .carousel-3d--slide {
     .carousel-plates--plate {
       .routine {
         height: 92px !important;
-        width: 336px;
+        width: 336px !important;
         line-height: 92px !important;
         border: none !important;
         padding: 0;
+      }
+      .newEnergy {
+        height: 92px !important;
+        width: 336px !important;
+        line-height: 92px !important;
+        border: none !important;
+        padding: 0;
+      }
+      .current .routine {
+        font-size: 52px !important;
+        width: 400px !important;
+      }
+      .current .newEnergy {
+        font-size: 52px !important;
+        width: 400px !important;
       }
     }
   }

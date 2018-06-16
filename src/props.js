@@ -75,14 +75,6 @@ export default {
     type: [String, Number],
     default: 50
   },
-  onLastSlide: {
-    type: Function,
-    default: () => {}
-  },
-  onSlideChange: {
-    type: Function,
-    default: () => {}
-  },
   bias: {
     type: String,
     default: 'left'
