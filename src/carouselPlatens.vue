@@ -11,10 +11,10 @@
     class="carousel-plates"
     v-if="plateNums && plateNums.length > 0"
     :border="0"
-    :space="180"
+    :space="140"
     :width="168"
-    :height="47"
-    :perspective="-45"
+    :height="60"
+    :perspective="0"
     @before-slide-change="onSlideChange">
     <slide v-for="(plateNum, i) in plateNums"
       :index="i"
@@ -82,14 +82,20 @@ export default {
 
 <style lang="scss">
 .carousel-plates {
+  .current .routine {
+    font-size: 52px !important;
+    width: 400px !important;
+    // width: auto !important;
+    // padding: 0 15px !important;
+  }
   .carousel-3d--slide {
     .carousel-plates--plate {
       .routine {
         height: 92px !important;
-        width: 336px !important;
+        width: 336px;
         line-height: 92px !important;
         border: none !important;
-        padding: 0 !important;
+        padding: 0;
       }
     }
   }

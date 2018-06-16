@@ -1,8 +1,8 @@
 <template>
   <div class="carousel-3d-container"
-    :style="{height: slideHeight + 'px'}">
+    :style="{height: slideHeight}">
     <div class="carousel-3d-slider"
-      :style="{width: slideWidth + 'px', height: slideHeight + 'px'}">
+      :style="{width: slideWidth, height: slideHeight}">
       <slot/>
     </div>
     <controls v-if="controlsVisible"
@@ -17,6 +17,7 @@
 import autoplay from './mixins/autoplay';
 import Controls from './Controls.vue';
 import Slide from './Slide.vue';
+import props from './props';
 
 const noop = () => {};
 
@@ -27,101 +28,10 @@ export default {
     Slide
   },
   props: {
+    ...props,
     count: {
       type: [Number, String],
       default: 0
-    },
-    perspective: {
-      type: [Number, String],
-      default: 35
-    },
-    display: {
-      type: [Number, String],
-      default: 5
-    },
-    loop: {
-      type: Boolean,
-      default: true
-    },
-    animationSpeed: {
-      type: [Number, String],
-      default: 500
-    },
-    dir: {
-      type: String,
-      default: 'rtl'
-    },
-    width: {
-      type: [Number, String],
-      default: 360
-    },
-    height: {
-      type: [Number, String],
-      default: 270
-    },
-    border: {
-      type: [Number, String],
-      default: 1
-    },
-    space: {
-      type: [Number, String],
-      default: 'auto'
-    },
-    startIndex: {
-      type: [Number, String],
-      default: 0
-    },
-    clickable: {
-      type: Boolean,
-      default: true
-    },
-    disable3d: {
-      type: Boolean,
-      default: false
-    },
-    minSwipeDistance: {
-      type: Number,
-      default: 10
-    },
-    inverseScaling: {
-      type: [Number, String],
-      default: 300
-    },
-    controlsVisible: {
-      type: Boolean,
-      default: false
-    },
-    controlsPrevHtml: {
-      type: String,
-      default: '&lsaquo;'
-    },
-    controlsNextHtml: {
-      type: String,
-      default: '&rsaquo;'
-    },
-    controlsWidth: {
-      type: [String, Number],
-      default: 50
-    },
-    controlsHeight: {
-      type: [String, Number],
-      default: 50
-    },
-    onLastSlide: {
-      type: Function,
-      default: noop
-    },
-    onSlideChange: {
-      type: Function,
-      default: noop
-    },
-    bias: {
-      type: String,
-      default: 'left'
-    },
-    onMainSlideClick: {
-      type: Function,
-      default: noop
     }
   },
   data() {
@@ -139,7 +49,7 @@ export default {
   mixins: [autoplay],
   watch: {
     count() {
-      this.computeData();
+      this.computeData(this.total === 0);
     }
   },
   computed: {
@@ -156,17 +66,24 @@ export default {
       return !(!this.loop && this.isFirstSlide);
     },
     slideWidth() {
-      const vw = this.viewport;
-      const sw = parseInt(this.width) + parseInt(this.border, 10) * 2;
+      if (!isNaN(Number(this.width))) {
+        const vw = this.viewport;
+        const sw = parseInt(this.width) + parseInt(this.border, 10) * 2;
 
-      return vw < sw ? vw : sw;
+        return `${vw < sw ? vw : sw}px`;
+      }
+      return this.width;
     },
     slideHeight() {
-      const sw = parseInt(this.width, 10) + parseInt(this.border, 10) * 2;
-      const sh = parseInt(parseInt(this.height) + this.border * 2, 10);
-      const ar = this.calculateAspectRatio(sw, sh);
+      if (!isNaN(Number(this.height)) && !isNaN(Number(this.width))) {
+        const sw = parseInt(this.width, 10) + parseInt(this.border, 10) * 2;
+        const sh = parseInt(parseInt(this.height) + this.border * 2, 10);
+        const ar = this.calculateAspectRatio(sw, sh);
 
-      return this.slideWidth / ar;
+        return `${Number(this.slideWidth.slice(0, this.slideWidth.length - 2)) /
+          ar}px`;
+      }
+      return this.height;
     },
     visible() {
       const v = this.display > this.total ? this.total : this.display;
@@ -359,9 +276,11 @@ export default {
 
       if (this.dragOffset > this.minSwipeDistance) {
         this.handleMouseup();
+        this.$emit('dragEvent', this.currentIndex, 'next');
         this.goNext();
       } else if (this.dragOffset < -this.minSwipeDistance) {
         this.handleMouseup();
+        this.$emit('dragEvent', this.currentIndex, 'prev');
         this.goPrev();
       }
     },
@@ -489,7 +408,7 @@ export default {
   position: relative;
   z-index: 0;
   overflow: hidden;
-  margin: 20px auto;
+  /* margin: 20px auto; */
   box-sizing: border-box;
 }
 
@@ -500,5 +419,7 @@ export default {
   -webkit-perspective: 1000px;
   -moz-perspective: 1000px;
   perspective: 1000px;
+  display: flex;
+  justify-content: center;
 }
 </style>

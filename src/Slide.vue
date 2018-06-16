@@ -15,10 +15,7 @@ export default {
       type: Number
     },
     slideStyle: {
-      type: Object,
-      default() {
-        return {};
-      }
+      type: Object
     },
     translateZ: Number
   },
@@ -70,8 +67,8 @@ export default {
         styles,
         {
           'border-width': this.parent.border + 'px',
-          // width: this.parent.slideWidth + 'px',
-          // height: this.parent.slideHeight + 'px',
+          width: this.parent.slideWidth,
+          height: this.parent.slideHeight,
           transition:
             ' transform ' +
             this.parent.animationSpeed +
@@ -83,7 +80,9 @@ export default {
             this.parent.animationSpeed +
             'ms'
         },
-        this.slideStyle || {}
+        this.slideStyle || {
+          width: '100%'
+        }
       );
     }
   },
@@ -113,13 +112,15 @@ export default {
         0;
       const leftRemain =
         this.parent.space === 'auto' ?
-          parseInt((i + 1) * (this.parent.width / 1.5), 10) :
-          parseInt((i + 1) * this.parent.space, 10);
+          `${parseInt((i + 1) * (this.parent.width / 1.5), 10)}px` :
+          !isNaN(Number(this.parent.space)) ?
+            `${parseInt((i + 1) * this.parent.space, 10)}px` :
+            this.parent.space;
 
       const transform = positive ?
-        `translateX(${leftRemain}px) translateZ(-${this.translateZ ||
+        `translateX(${leftRemain}) translateZ(-${this.translateZ ||
             z}px) rotateY(${this.parent.perspective > 0 ? '-' : ''}${y}deg)` :
-        `translateX(-${leftRemain}px) translateZ(-${this.translateZ ||
+        `translateX(-${leftRemain}) translateZ(-${this.translateZ ||
             z}px) rotateY(${this.parent.perspective > 0 ? '' : '-'}${y}deg)`;
 
       const top =
@@ -148,7 +149,7 @@ export default {
 
 <style>
 .carousel-3d-slide {
-  /* width: 100%; */
+  width: 100%;
   height: 100%;
   position: absolute;
   opacity: 0;
@@ -160,7 +161,7 @@ export default {
   border-color: rgba(0, 0, 0, 0.4);
   border-style: solid;
   background-size: cover;
-  background-color: #ccc;
+  /* background-color: #ccc; */
   display: block;
   margin: 0;
   box-sizing: border-box;
